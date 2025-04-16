@@ -1,0 +1,28 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://v6.bvg.transport.rest/stops/{{stopId}}/departures?duration=60
+polling_headers: ''
+id: 39029
+custom_fields:
+- keyname: stopId
+  field_type: string
+  name: Stop ID
+  description: Stop ID from the BVG API.
+  default: 900100003
+- keyname: modes
+  field_type: select
+  name: Preferred Transport Modes
+  help_text: Select which types of transport to show
+  options:
+  - U-Bahn: U
+  - Bus: Bus
+  - Tram: T
+  - S-Bahn: S
+  multiple: true
+  optional: true
+name: BVG
+refresh_interval: 15

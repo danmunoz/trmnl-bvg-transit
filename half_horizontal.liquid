@@ -1,0 +1,74 @@
+{% if trmnl.plugin_settings.custom_fields_values.modes %}
+  {% assign preferred_modes_string = trmnl.plugin_settings.custom_fields_values.modes %}
+{% else %}
+  {% assign preferred_modes_string = "U,S,T" %}
+{% endif %}
+{% assign preferred_modes_raw = preferred_modes_string %}
+
+<div class="layout layout--top">
+  <div class="stretch-y">
+    <table class="table table--bordered table--compact">
+      <thead>
+        <tr>
+          <th><span class="label label--bold">Time</span></th>
+          <th><span class="label label--bold">Direction</span></th>
+          <th><span class="label label--bold">Platform</span></th>
+          <th><span class="label label--bold">Delay</span></th>
+          <th><span class="label label--bold">Line</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in departures limit: 4 %}
+        {% assign mode = item.line.productName %}
+        {% if preferred_modes_raw contains mode %}
+        {% assign delay_minutes = item.delay | divided_by: 60 %}
+        <tr>
+          <td><span class="label">{{ item.plannedWhen | date: "%H:%M" }}</span></td>
+          <td><span class="label">{{ item.direction }}</span></td>
+          <td>
+            <span class="label">
+              {% if item.cancelled == true or mode == 'Bus' %}
+              -
+              {% else %}
+              {{ item.platform }}
+              {% endif %}
+            </span>
+          </td>
+          <td>
+            {% if item.delay > 0 %}
+            <span class="label label--inverted">+{{ delay_minutes }}m</span>
+            {% elsif item.delay < 0 %}
+              <span class="label label--inverted">{{ delay_minutes }}m</span>
+              {% else %}
+              <span class="label">On time</span>
+              {% endif %}
+          </td>
+          <td>
+            <span class="label">
+              {% case item.line.productName %}
+              {% when "T" %}
+              <img class="image" src="https://img.icons8.com/ios/25/tram.png"/>
+              {% when "U" %}
+              <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png"/>
+              {% when "Bus" %}
+              <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png"/>
+              {% else %}
+              <img class="image" src="https://img.icons8.com/ios/25/train.png"/>
+              {% endcase %}
+              {{ item.line.name }}
+            </span>
+          </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="https://images.icon-icons.com/3911/PNG/512/bvg_logo_icon_247409.png"/>
+  <span class="title">BVG - </span>
+  <span class="title">{{ departures[0].stop.name | truncate: 45 }}</span>
+  <span class="instance">{{ "now" | date: '%s' | plus: trmnl.user.utc_offset | date: "%Y-%m-%d %H:%M" }}</span>
+</div>
