@@ -1,29 +1,29 @@
 ---
 strategy: polling
-no_screen_padding: 'no'
-dark_mode: 'no'
-static_data: ''
+no_screen_padding: "no"
+dark_mode: "no"
+static_data: ""
 polling_verb: get
 polling_url: https://v6.bvg.transport.rest/stops/{{stopId}}/departures?duration=60
-polling_headers: ''
+polling_headers: ""
 id: 39029
 custom_fields:
-- keyname: stopId
-  field_type: string
-  name: Stop ID
-  description: Stop ID from the BVG API.
-  help_text: The Stop ID can be found using the <a href="link-to-api" target="https://v6.bvg.transport.rest/api.html#get-locations" class="underline">locations endpoint</a> of the BVG API.
-  default: 900100003
-- keyname: modes
-  field_type: select
-  name: Preferred Transport Modes
-  help_text: Select which types of transport to show.<br>Hold cmd(⌘) or ctrl to choose multiple options.
-  options:
-  - U-Bahn: U
-  - Bus: Bus
-  - Tram: T
-  - S-Bahn: S
-  multiple: true
-  optional: true
+  - keyname: stopId
+    field_type: string
+    name: Stop ID
+    description: Stop ID from the BVG API.
+    help_text: The Stop ID can be found using the <a href="link-to-api" target="https://v6.bvg.transport.rest/api.html#get-locations" class="underline">locations endpoint</a> of the BVG API.
+    default: 900100003
+  - keyname: modes
+    field_type: select
+    name: Preferred Transport Modes
+    help_text: Select which types of transport to show.<br>Hold cmd(⌘) or ctrl to choose multiple options.
+    options:
+      - U-Bahn: U
+      - Bus: B
+      - Tram: T
+      - S-Bahn: S
+    multiple: true
+    optional: true
 name: BVG - Berlin Public Transport
 refresh_interval: 15

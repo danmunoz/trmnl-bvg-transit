@@ -8,29 +8,30 @@
 <div class="layout layout--top">
   <div class="stretch-y">
     <table class="table table--bordered table--compact">
-      <thead>
-        <tr>
-          <th><span class="value value--xxsmall">Time</span></th>
-          <th><span class="value value--xxsmall">Direction</span></th>
-          <th><span class="value value--xxsmall">Line</span></th>
-        </tr>
-      </thead>
+        {% render "half_header" %}
       <tbody>
-        {% for item in departures limit: 4%}
-        {% assign mode = item.line.productName %}
+        {% assign count = 0 %}
+        {% for item in departures %}
+        {% assign mode = item.line.productName | slice: 0 %}
         {% if preferred_modes_raw contains mode %}
         {% assign delay_minutes = item.delay | divided_by: 60 %}
+        {% assign count = count | plus: 1 %}
         <tr>
-          <td><span class="label label--small">{{ item.plannedWhen | date: "%H:%M" }}</span></td>
+            <td><span class="label label--small">
+                {{ item.plannedWhen | date: "%H:%M" }}
+                {% if item.cancelled == true %}
+                <img class="image" src="https://img.icons8.com/ios/25/cancel.png" height="13"/>
+                {% endif %}
+            </span></td>
           <td><span class="label label--small">{{ item.direction | truncate: 40 }}</span></td>
           <td>
             <span class="label label--small">
-              {% case item.line.productName %}
+              {% case mode %}
               {% when "T" %}
               <img class="image" src="https://img.icons8.com/ios/25/tram.png" height="13"/>
               {% when "U" %}
               <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png" height="13"/>
-              {% when "Bus" %}
+              {% when "B" %}
               <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png" height="13"/>
               {% else %}
               <img class="image" src="https://img.icons8.com/ios/25/train.png" height="13"/>
@@ -39,6 +40,9 @@
             </span>
           </td>
         </tr>
+        {% endif %}
+        {% if count == 4 %}
+            {% break %}
         {% endif %}
         {% endfor %}
       </tbody>
@@ -51,4 +55,3 @@
   <span class="title">BVG - Berlin </span>
   <span class="instance">{{ "now" | date: '%s' | plus: trmnl.user.utc_offset | date: "%d.%m.%Y %H:%M" }}</span>
 </div>
-
