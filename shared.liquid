@@ -1,0 +1,40 @@
+{% template full_header %}
+<thead>
+  <tr>
+    <th><span class="label label--bold">Time</span></th>
+    <th><span class="label label--bold">Direction</span></th>
+    <th><span class="label label--bold">Plat</span></th>
+    <th><span class="label label--bold">Note</span></th>
+    <th><span class="label label--bold">Delay</span></th>
+    <th><span class="label label--bold">Line</span></th>
+  </tr>
+</thead>
+{% endtemplate %}
+
+{% template half_header %}
+<thead>
+  <tr>
+    <th><span class="label label--small">Time</span></th>
+    <th><span class="label label--small">Direction</span></th>
+    <th><span class="label label--small">Line</span></th>
+  </tr>
+</thead>
+{% endtemplate %}
+
+{% template start_loop %}
+    {% assign count = 0 %}
+    {% for item in departures %}
+    {% assign mode = item.line.productName | slice: 0 %}
+    {% if preferred_modes_raw contains mode %}
+    {% assign delay_minutes = item.delay | divided_by: 60 %}
+    {% assign count = count | plus: 1 %}
+{% endtemplate %}
+
+
+{% template end_loop %}
+{% endif %}
+{% if count == {{count}} %}
+    {% break %}
+{% endif %}
+{% endfor %}
+{% endtemplate %}

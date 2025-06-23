@@ -8,26 +8,20 @@
 <div class="layout layout--top">
   <div class="stretch-y">
     <table class="table table--bordered table--compact">
-      <thead>
-        <tr>
-          <th><span class="label label--bold">Time</span></th>
-          <th><span class="label label--bold">Direction</span></th>
-          <th><span class="label label--bold">Platform</span></th>
-          <th><span class="label label--bold">Delay</span></th>
-          <th><span class="label label--bold">Line</span></th>
-        </tr>
-      </thead>
+        {% render "full_header" %}
       <tbody>
+        {% assign count = 0 %}
         {% for item in departures %}
-        {% assign mode = item.line.productName %}
+        {% assign mode = item.line.productName | slice: 0 %}
         {% if preferred_modes_raw contains mode %}
         {% assign delay_minutes = item.delay | divided_by: 60 %}
+        {% assign count = count | plus: 1 %}
         <tr>
           <td><span class="label">{{ item.plannedWhen | date: "%H:%M" }}</span></td>
           <td><span class="label">{{ item.direction }}</span></td>
           <td>
             <span class="label">
-              {% if item.cancelled == true or mode == 'Bus' %}
+              {% if item.cancelled == true or mode == 'B' %}
               -
               {% else %}
               {{ item.platform }}
@@ -35,22 +29,36 @@
             </span>
           </td>
           <td>
-            {% if item.delay > 0 %}
-            <span class="label label--inverted">+{{ delay_minutes }}m</span>
-            {% elsif item.delay < 0 %}
-              <span class="label label--inverted">{{ delay_minutes }}m</span>
+            <span class="label">
+              {% for remark in item.remarks %}
+                {% if remark.type == "warning" %}
+                  <img class="image" src="https://img.icons8.com/ios/25/error.png"/>
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+            </span>
+          </td>
+          <td>
+            {% if item.cancelled == true %}
+              <span class="label label--inverted text--center">Cancelled</span>
+            {% else %}
+              {% if item.delay > 0 %}
+                <span class="label label--inverted text--center">+{{ delay_minutes }}m</span>
+              {% elsif item.delay < 0 %}
+                <span class="label label--inverted text--center">{{ delay_minutes }}m</span>
               {% else %}
-              <span class="label">On time</span>
+                <span class="label">On time</span>
               {% endif %}
+            {% endif %}
           </td>
           <td>
             <span class="label">
-              {% case item.line.productName %}
+              {% case mode %}
               {% when "T" %}
               <img class="image" src="https://img.icons8.com/ios/25/tram.png"/>
               {% when "U" %}
               <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png"/>
-              {% when "Bus" %}
+              {% when "B" %}
               <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png"/>
               {% else %}
               <img class="image" src="https://img.icons8.com/ios/25/train.png"/>
@@ -59,6 +67,9 @@
             </span>
           </td>
         </tr>
+        {% endif %}
+        {% if count == 8 %}
+            {% break %}
         {% endif %}
         {% endfor %}
       </tbody>
