@@ -1,7 +1,7 @@
 {% if trmnl.plugin_settings.custom_fields_values.modes %}
   {% assign preferred_modes_string = trmnl.plugin_settings.custom_fields_values.modes %}
 {% else %}
-  {% assign preferred_modes_string = "U,S,T" %}
+  {% assign preferred_modes_string = "Tram,U,S,Bus" %}
 {% endif %}
 {% assign preferred_modes_raw = preferred_modes_string %}
 
@@ -46,7 +46,7 @@
           <td>
             <span class="label">
               {% case item.line.productName %}
-              {% when "T" %}
+              {% when "Tram" %}
               <img class="image" src="https://img.icons8.com/ios/25/tram.png"/>
               {% when "U" %}
               <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png"/>
