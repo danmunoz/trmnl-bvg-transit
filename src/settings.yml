@@ -4,8 +4,11 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
+framework_version: 2.3.7
+serverless_language: ''
 polling_url: https://v6.bvg.transport.rest/stops/{{stopId}}/departures?duration=60
 polling_headers: ''
+polling_body: ''
 id: 39029
 custom_fields:
 - keyname: stopId
@@ -21,7 +24,7 @@ custom_fields:
   options:
   - U-Bahn: U
   - Bus: Bus
-  - Tram: T
+  - Tram: Tram
   - S-Bahn: S
   multiple: true
   optional: true

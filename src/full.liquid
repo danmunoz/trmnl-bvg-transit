@@ -5,9 +5,9 @@
 {% endif %}
 {% assign preferred_modes_raw = preferred_modes_string %}
 
-<div class="layout layout--top">
-  <div class="stretch-y">
-    <table class="table table--bordered table--compact">
+<div class="layout layout--top layout--stretch-x layout--stretch-y">
+  <div>
+    <table class="table table--bordered table--small" data-table-limit="true" data-table-max-height="auto">
       <thead>
         <tr>
           <th><span class="label label--bold">Time</span></th>
@@ -18,13 +18,14 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in departures limit: 4 %}
+        {% for item in departures limit: 25 %}
         {% assign mode = item.line.productName %}
         {% if preferred_modes_raw contains mode %}
-        {% assign delay_minutes = item.delay | divided_by: 60 %}
+        {% assign delay_seconds = item.delay | default: 0 %}
+        {% assign delay_minutes = delay_seconds | divided_by: 60 %}
         <tr>
           <td><span class="label">{{ item.plannedWhen | date: "%H:%M" }}</span></td>
-          <td><span class="label">{{ item.direction }}</span></td>
+          <td><span class="label" data-clamp="1">{{ item.direction }}</span></td>
           <td>
             <span class="label">
               {% if item.cancelled == true or mode == 'Bus' %}
@@ -35,28 +36,26 @@
             </span>
           </td>
           <td>
-            {% if item.delay > 0 %}
+            {% if delay_seconds > 0 %}
             <span class="label label--inverted">+{{ delay_minutes }}m</span>
-            {% elsif item.delay < 0 %}
+            {% elsif delay_seconds < 0 %}
               <span class="label label--inverted">{{ delay_minutes }}m</span>
               {% else %}
               <span class="label">On time</span>
               {% endif %}
           </td>
           <td>
-            <span class="label">
-              {% case item.line.productName %}
-              {% when "Tram" %}
-              <img class="image" src="https://img.icons8.com/ios/25/tram.png"/>
-              {% when "U" %}
-              <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png"/>
-              {% when "Bus" %}
-              <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png"/>
-              {% else %}
-              <img class="image" src="https://img.icons8.com/ios/25/train.png"/>
-              {% endcase %}
-              {{ item.line.name }}
-            </span>
+            {% case mode %}
+            {% when "Tram" %}
+            <img class="image" src="https://img.icons8.com/ios/25/tram.png" height="18"/>
+            {% when "U" %}
+            <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png" height="18"/>
+            {% when "Bus" %}
+            <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png" height="18"/>
+            {% else %}
+            <img class="image" src="https://img.icons8.com/ios/25/train.png" height="18"/>
+            {% endcase %}
+            <span class="label">{{ item.line.name }}</span>
           </td>
         </tr>
         {% endif %}
@@ -69,6 +68,6 @@
 <div class="title_bar">
   <img class="image" src="https://images.icon-icons.com/3911/PNG/512/bvg_logo_icon_247409.png"/>
   <span class="title">BVG - </span>
-  <span class="title">{{ departures[0].stop.name | truncate: 45 }}</span>
+  <span class="title" data-clamp="1">{{ departures[0].stop.name | truncate: 45 }}</span>
   <span class="instance">{{ "now" | date: '%s' | plus: trmnl.user.utc_offset | date: "%Y-%m-%d %H:%M" }}</span>
 </div>

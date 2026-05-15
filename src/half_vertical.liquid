@@ -5,9 +5,9 @@
 {% endif %}
 {% assign preferred_modes_raw = preferred_modes_string %}
 
-<div class="layout layout--top">
-  <div class="stretch-y">
-    <table class="table table--bordered table--compact">
+<div class="layout layout--top layout--stretch-x layout--stretch-y">
+  <div>
+    <table class="table table--bordered table--small">
       <thead>
         <tr>
           <th><span class="label label--small">Time</span></th>
@@ -16,27 +16,24 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in departures %}
+        {% for item in departures limit: 25 %}
         {% assign mode = item.line.productName %}
         {% if preferred_modes_raw contains mode %}
-        {% assign delay_minutes = item.delay | divided_by: 60 %}
         <tr>
           <td><span class="label label--small">{{ item.plannedWhen | date: "%H:%M" }}</span></td>
-          <td><span class="label label--small">{{ item.direction | truncate: 40 }}</span></td>
+          <td><span class="label label--small" data-clamp="1">{{ item.direction | truncate: 40 }}</span></td>
           <td>
-            <span class="label label--small">
-              {% case item.line.productName %}
-              {% when "Tram" %}
-              <img class="image" src="https://img.icons8.com/ios/25/tram.png" height="13"/>
-              {% when "U" %}
-              <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png" height="13"/>
-              {% when "Bus" %}
-              <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png" height="13"/>
-              {% else %}
-              <img class="image" src="https://img.icons8.com/ios/25/train.png" height="13"/>
-              {% endcase %}
-              {{ item.line.name }}
-            </span>
+            {% case mode %}
+            {% when "Tram" %}
+            <img class="image" src="https://img.icons8.com/ios/25/tram.png" height="13"/>
+            {% when "U" %}
+            <img class="image" src="https://img.icons8.com/ios-filled/25/subway.png" height="13"/>
+            {% when "Bus" %}
+            <img class="image" src="https://img.icons8.com/ios-filled/25/bus.png" height="13"/>
+            {% else %}
+            <img class="image" src="https://img.icons8.com/ios/25/train.png" height="13"/>
+            {% endcase %}
+            <span class="label label--small">{{ item.line.name }}</span>
           </td>
         </tr>
         {% endif %}
