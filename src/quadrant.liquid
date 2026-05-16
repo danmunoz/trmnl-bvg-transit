@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in departures limit: 4%}
+        {% for item in departures limit: 10%}
         {% assign mode = item.line.productName %}
         {% if preferred_modes_raw contains mode %}
         <tr>
