@@ -26,7 +26,7 @@ curl 'https://v6.bvg.transport.rest/locations?query=alexanderplatz&results=1&lin
 
 Replace `alexanderplatz` with the name of the stop you're interested in.
 
-The recipe polls the next 60 minutes of departures and caps the response at 25 results, matching the largest TRMNL layout while keeping API responses bounded for reliable refreshes.
+The recipe polls the next 60 minutes of departures and caps the response at 25 results, matching the largest TRMNL layout while keeping API responses bounded for reliable refreshes. It also disables parsed remarks and pretty-printed JSON because the templates do not render remarks and smaller API responses are more reliable for TRMNL polling.
 
 ---
 
